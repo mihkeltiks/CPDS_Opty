@@ -10,14 +10,14 @@ init(Value) ->
 entry(Value, Time) ->
     receive
         {read, Ref, From} ->
-            Pid = self(),
-            From ! {Ref, Value, Time, Pid},
+            From ! {Ref, self(), Value, Time},
             entry(Value, Time);
         {write, New} ->
-            entry(New , make_ref());  
+            entry(New, make_ref());
         {check, Ref, Readtime, From} ->
             if 
-                 Time == Readtime ->   From ! {Ref, ok};
+                 Readtime == Time ->
+                    From ! {Ref, ok};
                 true ->
                     From ! {Ref, abort}
             end,
