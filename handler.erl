@@ -13,7 +13,7 @@ handler(Client, Validator, Store, Reads, Writes) ->
             case lists:keyfind(N, 1, Writes) of 
                 {N, _, Value} ->
 		    Client!{value,Ref,Value},
-                    handler(Client, Validator, Store, .Reads, Writes);
+                    handler(Client, Validator, Store, Reads, Writes);
                 false ->
 		    Entry = store:lookup(N, Store),
 		    Entry ! {read, Ref, self()},			

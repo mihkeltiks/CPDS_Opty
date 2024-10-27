@@ -17,7 +17,7 @@ validator() ->
                     update(Writes),  %% TODO: COMPLETE
                     Client ! {Ref, ok};
                 abort ->
-                    Client ! {Ref, abort};.
+                    Client ! {Ref, abort}
             end,
             validator();
         stop ->
@@ -28,14 +28,14 @@ validator() ->
     
 update(Writes) ->
     lists:foreach(fun({_, Entry, Value}) -> 
-                  Entry ! {write, Value},
+                  Entry ! {write, Value}
                   end, 
                   Writes).
 
 send_read_checks(Reads, Tag) ->
     Self = self(),
     lists:foreach(fun({Entry, Time}) -> 
-                  Entry ! {check,  Tag, Time, Self},
+                  Entry ! {check,  Tag, Time, Self}
                   end, 
                   Reads).
 
