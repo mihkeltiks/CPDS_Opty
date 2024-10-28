@@ -10,7 +10,7 @@ open(ClientID, Entries, Reads, Writes, Server, Total, Ok) ->
         {stop, From} ->
             io:format("~w: Transactions TOTAL:~w, OK:~w, -> ~w % ~n",
             [ClientID, Total, Ok, 100*Ok/Total]),
-            From ! {done, self()},
+            From ! {done, self(), 100*Ok/Total},
             ok;
         {transaction, Validator, Store} ->
             Handler = handler:start(self(), Validator, Store),
