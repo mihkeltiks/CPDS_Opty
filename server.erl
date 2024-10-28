@@ -6,7 +6,7 @@ start(N) ->
 
 init(N) ->
     Store = store:new(N),
-    Validator = validator:start(),
+    Validator = validatorForward:start(),
     server(Validator, Store).
     
 server(Validator, Store) ->

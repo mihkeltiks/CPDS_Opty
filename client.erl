@@ -13,7 +13,7 @@ open(ClientID, Entries, Reads, Writes, Server, Total, Ok) ->
             From ! {done, self()},
             ok;
         {transaction, Validator, Store} ->
-            Handler = handler:start(self(), Validator, Store),
+            Handler = handlerForward:start(self(), Validator, Store),
             case do_transaction(ClientID, Entries, Reads, Writes, Handler) of
                 ok ->
                     open(ClientID, Entries, Reads, Writes, Server, Total+1, Ok+1);

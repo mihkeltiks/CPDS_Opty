@@ -16,5 +16,5 @@ lookup(I, Store) ->
 entries(0, ListSoFar) ->
     ListSoFar;
 entries(N, ListSoFar) ->
-    Entry = entry:new(0),
+    Entry = entryForward:new(0),
     entries(N-1, [Entry|ListSoFar]).
