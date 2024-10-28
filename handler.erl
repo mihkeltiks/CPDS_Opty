@@ -22,11 +22,14 @@ handler(Client, Validator, Store, Reads, Writes) ->
         {Ref, Entry, Value, Time} ->
             Client ! {value, Ref, Value},
             handler(Client, Validator, Store, [{Entry, Time}|Reads], Writes);
+            Client ! {value, Ref, Value},
+            handler(Client, Validator, Store, [{Entry, Time}|Reads], Writes);
         {write, N, Value} ->
 	    Entry = store:lookup(N, Store),
             Added = lists:keystore(N, 1, Writes, {N, Entry, Value}),
             handler(Client, Validator, Store, Reads, Added);
         {commit, Ref} ->
+            Validator ! {validate, Ref, Reads, Writes, Client};
             Validator ! {validate, Ref, Reads, Writes, Client};
         abort ->
             ok
