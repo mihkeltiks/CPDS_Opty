@@ -18,7 +18,6 @@ validator() ->
                     Client ! {Ref, ok};
                 abort ->
                     Client ! {Ref, abort}
-                    Client ! {Ref, abort}
             end,
             validator();
         stop ->
