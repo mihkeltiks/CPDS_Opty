@@ -10,7 +10,7 @@ open(ClientID, Entries, Reads, Writes, Server, Total, Ok) ->
         {stop, From} ->
             io:format("~w: Transactions TOTAL:~w, OK:~w, -> ~w % ~n",
             [ClientID, Total, Ok, 100*Ok/Total]),
-            From ! {done, self()},
+            From ! {done, self(), 100*Ok, Total},
             ok;
         {transaction, Validator, Store} ->
             Handler = handlerForward:start(self(), Validator, Store),
@@ -41,15 +41,21 @@ do_transaction(ClientID, Entries, Reads, Writes, Handler) ->
     end.
 
 do_read(Entries, Handler) ->
+    RandomIndex = rand:uniform(length(Entries)),
+    Num = lists:nth(RandomIndex, Entries),
     Ref = make_ref(),
-    Num = rand:uniform(Entries),
+%    Num = rand:uniform(Entries),
+%    io:format("Reading ~w ", [Num]),
     Handler ! {read, Ref, Num},
     receive
         {value, Ref, Value} -> Value
     end.
 
 do_write(Entries, Handler, Value) ->
-    Num = rand:uniform(Entries),
+    RandomIndex = rand:uniform(length(Entries)),
+    Num = lists:nth(RandomIndex, Entries),  % Get the actual entry using the random index
+%    io:format("Writing ~w From ~w s~n ", [Num, Entries]),
+%    Num = rand:uniform(Entries),
     Handler ! {write, Num, Value}.
 
 do_commit(Handler) ->
